@@ -21,14 +21,6 @@ class TaskController extends Controller
 
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreTaskRequest $request)
@@ -54,19 +46,23 @@ class TaskController extends Controller
        return TaskResource::make($model[0]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
+        if(!$request->id){
+            return "Please include a valid id";
+        }
+        
+
+        $query = Task::where('id', $request->id)->get();
+        $query->toQuery()->update(['name'=>$request->name, 'is_completed'=> $request->is_completed]);
+
+
+        return TaskResource::collection(Task::all());
+  
         //
     }
 
